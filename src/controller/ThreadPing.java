@@ -24,7 +24,9 @@ public class ThreadPing extends Thread{
 		if (os().contains("Linux")) {
 			StringBuffer criarComando = new StringBuffer();
 			criarComando.append("ping -4 -c 10 ");
+			criarComando.append("www.");
 			criarComando.append(servidor);
+			criarComando.append(".com.br");
 			String[] comando = (criarComando.toString()).split(" ");
 			
 			try {
@@ -32,9 +34,18 @@ public class ThreadPing extends Thread{
 				InputStreamReader leitor = new InputStreamReader((p.getInputStream()));
 				BufferedReader ler = new BufferedReader(leitor);
 				String linha = ler.readLine();
+				String[] tempo, tempoMedio;
 				
 				while (linha != null) {
-					
+					if (linha.contains("time=")) {
+						tempo = linha.split("time=");
+						System.out.println(servidor + " -> " + tempo[1].trim());
+					}
+					if (linha.contains("avg")) {
+						tempoMedio = linha.split("/");
+						System.out.println("Tempo médio do servidor " + servidor + ": " + tempoMedio[4] + " ms.");
+					}
+					linha = ler.readLine();
 				}
 				
 			} catch(Exception e) {
